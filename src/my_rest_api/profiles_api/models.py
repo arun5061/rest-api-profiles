@@ -11,13 +11,13 @@ class UserProfileManager(BaseUserManager):
 
         if not email:
             raise ValueError('User must have mail')
-
+        """normalize_email - This allow to normalize i.e it will take caps, smalls and treats same"""
         email = self.normalize_email(email)
         user = self.model(email=email, name = name)
 
         user.set_password(password)
         user.save(using=self._db)
-
+        print('mod_user:', user)
         return user
 
     def create_superuser(self, email, name, password):

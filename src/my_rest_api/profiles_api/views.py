@@ -1,9 +1,14 @@
 from django.shortcuts import render
+from . import serializers
+from . import models
+from . import permissions
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from . import serializers
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
 
 # Create your views here.
 
@@ -74,3 +79,14 @@ class HelloViewSet(viewsets.ViewSet):
     def destroy(self, requests, pk=None):
 
         return Response({'method3':'delete'})
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+
+    serializer_class = serializers.UserProfileSerializer
+    print('serli_calss:',serializer_class)
+    queryset = models.UserProfile.objects.all()
+    print('queryset:', queryset)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields =
