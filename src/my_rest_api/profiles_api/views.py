@@ -103,9 +103,12 @@ class StatusViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.OwnStatusUpdate, IsAuthenticated)
     serializer_class = serializers.StatusSerializer
     queryset = models.ProfileStatus.objects.all()
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('status_tag', 'status_text',)
 
     def perform_create(self, serializer):
-        print('imp:',self.request)
         serializer.save(user_profile = self.request.user)
+        user_profile = self.request.user
+        print('user_profile:', user_profile)
 
 
