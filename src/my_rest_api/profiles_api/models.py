@@ -56,7 +56,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 class ProfileStatus(models.Model):
 
     user_profile = models.ForeignKey('UserProfile',on_delete=models.CASCADE)
-    user_name = user_profile.name
     status_tag  = models.CharField(max_length=120)
     status_text = models.TextField(blank=False, null=False)
     created_on = models.DateTimeField(auto_now_add=True)

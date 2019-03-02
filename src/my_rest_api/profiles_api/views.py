@@ -100,7 +100,7 @@ class LoginViewSet(viewsets.ViewSet):
 
 class StatusViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.OwnStatusUpdate, IsAuthenticated)
+    permission_classes = (permissions.OwnStatusUpdate,)
     serializer_class = serializers.StatusSerializer
     queryset = models.ProfileStatus.objects.all()
     filter_backends = (filters.SearchFilter,)
