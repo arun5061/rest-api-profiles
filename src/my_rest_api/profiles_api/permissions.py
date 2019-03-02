@@ -10,3 +10,11 @@ class UpdateOwnProfile(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.id == request.user.id
+
+class OwnStatusUpdate(permissions.BasePermission):
+    """This class allows user to edit only their own profile else it give only view access"""
+    def has_object_permission(self, request, view, obj):
+        """Checking request method it allows only GET access if not return false"""
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.user_profile.id == request.user.id

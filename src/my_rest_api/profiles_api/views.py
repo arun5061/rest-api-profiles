@@ -9,6 +9,9 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -57,7 +60,7 @@ class HelloViewSet(viewsets.ViewSet):
         return Response({'msg':'Hey Arun, Ur first viewset', 'a_viewset': a_viewset})
 
     def create(self, requests):
-        view_data = serializers.HelloSerializer(data=requests.data)
+        view_data = serializers.HelolSerializer(data=requests.data)
         if view_data.is_valid():
             mail = view_data.data.get('mail')
             msg = 'Hey my {} id'.format(mail)
@@ -83,10 +86,26 @@ class HelloViewSet(viewsets.ViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = serializers.UserProfileSerializer
-    print('serli_calss:',serializer_class)
     queryset = models.UserProfile.objects.all()
-    print('queryset:', queryset)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
-    search_fields =
+    search_fields = ('name', 'email',)
+
+class LoginViewSet(viewsets.ViewSet):
+    serializer_class = AuthTokenSerializer
+
+    def create(self, request):
+        return ObtainAuthToken().post(request)
+
+class StatusViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.OwnStatusUpdate, IsAuthenticated)
+    serializer_class = serializers.StatusSerializer
+    queryset = models.ProfileStatus.objects.all()
+
+    def perform_create(self, serializer):
+        print('imp:',self.request)
+        serializer.save(user_profile = self.request.user)
+
+
